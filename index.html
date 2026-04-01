@@ -105,7 +105,7 @@
   const APP_SCHEME     = "armbrok";
   const APP_HOST       = "finishSignIn";
   const APP_STORE_URL  = "YOUR_APP_STORE_URL";   // https://apps.apple.com/app/idXXXXXX
-  const PLAY_STORE_URL = "YOUR_PLAY_STORE_URL";  // https://play.google.com/store/apps/details?id=com.armbrok.app.stage
+  const PLAY_STORE_URL = "YOUR_PLAY_STORE_URL";  // https://play.google.com/store/apps/details?id=com.armbrok.app
   // ─────────────────────────────────────────────────────────────────────────────
 
   document.getElementById("appStoreBtn").href  = APP_STORE_URL;
@@ -125,21 +125,40 @@
     downloadSection.style.display = "block";
   }
 
-  // Try opening the app immediately
-  openApp();
+  // Safari blocks programmatic custom scheme redirects on page load.
+  // Must be triggered by a user gesture (tap).
+  statusEl.innerHTML = `<span>Tap below to open the app</span>`;
+  downloadSection.style.display = "block";
 
-  // After 2s, if page still visible → app not installed
-  setTimeout(() => {
-    if (!document.hidden) showDownload();
-  }, 2000);
+  const tryAgainBtn = document.getElementById("tryAgain");
+  tryAgainBtn.textContent = "Open Armbrok App";
+  tryAgainBtn.style.cssText = `
+    margin-top: 16px;
+    padding: 14px 28px;
+    background: #1A56A0;
+    color: white;
+    border: none;
+    border-radius: 12px;
+    font-size: 16px;
+    font-weight: 600;
+    cursor: pointer;
+    width: 100%;
+    text-decoration: none;
+  `;
 
-  // "Try again" button
-  document.getElementById("tryAgain").onclick = () => {
-    statusEl.innerHTML = `<div class="spinner"></div><span>Trying again…</span>`;
-    downloadSection.style.display = "none";
-    openApp();
+  tryAgainBtn.onclick = () => {
+    openApp(); // safe — inside click handler
     setTimeout(() => {
-      if (!document.hidden) showDownload();
+      if (!document.hidden) {
+        // Still here → app not installed, show store buttons
+        statusEl.innerHTML = `<span style="color:#C0392B">App not detected on this device.</span>`;
+        tryAgainBtn.textContent = "Try Again";
+        tryAgainBtn.style.background = "none";
+        tryAgainBtn.style.color = "#1A56A0";
+        tryAgainBtn.style.padding = "0";
+        tryAgainBtn.style.fontSize = "13px";
+        tryAgainBtn.style.textDecoration = "underline";
+      }
     }, 2000);
   };
 </script>
