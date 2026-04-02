@@ -102,10 +102,9 @@
 
 <script>
   // ─── FILL IN YOUR URLS ───────────────────────────────────────────────────────
-  const APP_SCHEME     = "armbrok";
-  const APP_HOST       = "finishSignIn";
-  const APP_STORE_URL  = "YOUR_APP_STORE_URL";   // https://apps.apple.com/app/idXXXXXX
-  const PLAY_STORE_URL = "YOUR_PLAY_STORE_URL";  // https://play.google.com/store/apps/details?id=com.armbrok.app
+  const UNIVERSAL_LINK_DOMAIN = "umbrellait-zafar-abdulloev.github.io"; // your domain with apple-app-site-association
+  const APP_STORE_URL         = "YOUR_APP_STORE_URL";   // https://apps.apple.com/app/idXXXXXX
+  const PLAY_STORE_URL        = "YOUR_PLAY_STORE_URL";  // https://play.google.com/store/apps/details?id=com.armbrok.app
   // ─────────────────────────────────────────────────────────────────────────────
 
   document.getElementById("appStoreBtn").href  = APP_STORE_URL;
@@ -116,8 +115,17 @@
 
   function openApp() {
     const continueUrl = window.location.href;
-    const appUrl = `${APP_SCHEME}://${APP_HOST}?link=${encodeURIComponent(continueUrl)}`;
-    window.location.href = appUrl;
+    const universalLink = `https://${UNIVERSAL_LINK_DOMAIN}/auth/action?link=${encodeURIComponent(continueUrl)}`;
+    const isSafari = /^((?!chrome|android).)*safari/i.test(navigator.userAgent);
+
+    if (isSafari) {
+      // Already in Safari — Universal Link fires normally
+      window.location.href = universalLink;
+    } else {
+      // Chrome / Gmail / any WKWebView — force open in Safari first,
+      // Safari will then intercept the Universal Link and open the app
+      window.location.href = `x-safari-${universalLink}`;
+    }
   }
 
   function showDownload() {
