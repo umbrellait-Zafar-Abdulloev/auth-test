@@ -3,13 +3,13 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
-  <title>Signing you in...</title>
+  <title>Confirm Your Email — ROQ Markets</title>
   <style>
     * { margin: 0; padding: 0; box-sizing: border-box; }
 
     body {
       font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
-      background: #f0f4ff;
+      background: #0f1117;
       display: flex;
       align-items: center;
       justify-content: center;
@@ -17,72 +17,78 @@
     }
 
     .card {
-      background: white;
+      background: #1a1c25;
       border-radius: 20px;
-      padding: 48px 40px;
+      padding: 40px 40px 28px;
       max-width: 400px;
       width: 90%;
       text-align: center;
-      box-shadow: 0 8px 32px rgba(0,0,0,0.08);
+      box-shadow: 0 8px 32px rgba(0,0,0,0.3);
+      border: 1px solid rgba(255,255,255,0.06);
     }
 
     .icon {
-      width: 64px; height: 64px;
+      width: 72px; height: 72px;
       border-radius: 16px;
-      background: #1A56A0;
-      display: flex; align-items: center; justify-content: center;
+      overflow: hidden;
       margin: 0 auto 24px;
     }
-    .icon svg { width: 32px; height: 32px; fill: white; }
+    .icon img { width: 100%; height: 100%; object-fit: cover; }
 
-    h1 { font-size: 22px; font-weight: 700; color: #1a1a2e; margin-bottom: 10px; }
-    .subtitle { font-size: 15px; color: #888; line-height: 1.5; margin-bottom: 32px; }
+    h1 { font-size: 22px; font-weight: 700; color: #ffffff; margin-bottom: 10px; }
+    .subtitle { font-size: 15px; color: #8e90a0; line-height: 1.6; margin-bottom: 20px; }
+
+    .open-btn {
+      display: block;
+      width: 100%;
+      padding: 16px 28px;
+      background: #B71C1C;
+      color: white;
+      border: none;
+      border-radius: 12px;
+      font-size: 17px;
+      font-weight: 600;
+      cursor: pointer;
+      transition: opacity 0.2s;
+      text-decoration: none;
+    }
+    .open-btn:hover { opacity: 0.9; }
+    .open-btn:active { opacity: 0.8; }
 
     .status {
-      display: flex; align-items: center; justify-content: center;
-      gap: 10px; font-size: 14px; color: #1A56A0; font-weight: 500; min-height: 28px;
+      margin-top: 16px;
+      font-size: 14px;
+      color: #E74C3C;
+      min-height: 20px;
     }
-    .spinner {
-      width: 18px; height: 18px;
-      border: 2px solid #d0dff5; border-top-color: #1A56A0;
-      border-radius: 50%; animation: spin 0.8s linear infinite; flex-shrink: 0;
-    }
-    @keyframes spin { to { transform: rotate(360deg); } }
 
     .download-section { display: none; margin-top: 28px; }
-    .download-label { font-size: 13px; color: #aaa; margin-bottom: 16px; }
+    .download-label { font-size: 13px; color: #5a5c6e; margin-bottom: 16px; }
     .store-buttons { display: flex; flex-direction: column; gap: 12px; }
 
     .store-btn {
       display: flex; align-items: center; justify-content: center;
       gap: 12px; padding: 14px 20px; border-radius: 12px;
-      border: none; cursor: pointer; font-size: 15px; font-weight: 600;
+      border: 1px solid rgba(255,255,255,0.08);
+      cursor: pointer; font-size: 15px; font-weight: 600;
       text-decoration: none; transition: opacity 0.2s;
     }
     .store-btn:hover { opacity: 0.85; }
     .store-btn svg { width: 22px; height: 22px; flex-shrink: 0; }
     .btn-appstore  { background: #000; color: #fff; }
     .btn-playstore { background: #01875f; color: #fff; }
-
-    .try-again {
-      margin-top: 16px; font-size: 13px; color: #1A56A0;
-      cursor: pointer; text-decoration: underline;
-      background: none; border: none;
-    }
   </style>
 </head>
 <body>
 <div class="card">
   <div class="icon">
-    <svg viewBox="0 0 24 24"><path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm-2 14.5v-9l6 4.5-6 4.5z"/></svg>
+    <img src="1024x1024.png" alt="ROQ Markets" />
   </div>
-  <h1>Armbrok</h1>
-  <p class="subtitle">Opening the app to complete<br/>your sign-in…</p>
+  <h1>Confirm Your Email</h1>
+  <p class="subtitle">Tap the button below to open the ROQ Markets app and complete your email confirmation.</p>
 
-  <div class="status" id="status">
-    <div class="spinner"></div>
-    <span>Redirecting to app…</span>
-  </div>
+  <button class="open-btn" id="openAppBtn">Open ROQ Markets</button>
+  <div class="status" id="status"></div>
 
   <div class="download-section" id="downloadSection">
     <p class="download-label">Don't have the app yet? Download it here:</p>
@@ -96,79 +102,60 @@
         Google Play
       </a>
     </div>
-    <button class="try-again" id="tryAgain">Already installed? Try opening again</button>
   </div>
 </div>
 
 <script>
   // ─── FILL IN YOUR URLS ───────────────────────────────────────────────────────
-  const UNIVERSAL_LINK_DOMAIN = "stage.armbrok.am"; // your domain with apple-app-site-association
-  const APP_STORE_URL         = "YOUR_APP_STORE_URL";   // https://apps.apple.com/app/idXXXXXX
-  const PLAY_STORE_URL        = "YOUR_PLAY_STORE_URL";  // https://play.google.com/store/apps/details?id=com.armbrok.app
+  const UNIVERSAL_LINK_DOMAIN = "stage.armbrok.am";
+  const APP_STORE_URL         = "YOUR_APP_STORE_URL";
+  const PLAY_STORE_URL        = "https://play.google.com/store/apps/details?id=com.armbrok.app.stage";
   // ─────────────────────────────────────────────────────────────────────────────
 
   document.getElementById("appStoreBtn").href  = APP_STORE_URL;
   document.getElementById("playStoreBtn").href = PLAY_STORE_URL;
 
+  const openAppBtn      = document.getElementById("openAppBtn");
   const statusEl        = document.getElementById("status");
   const downloadSection = document.getElementById("downloadSection");
 
-  function openApp() {
-    const continueUrl = window.location.href;
-    const universalLink = `https://${UNIVERSAL_LINK_DOMAIN}/auth/action`;
-    const isSafari = /^((?!chrome|android).)*safari/i.test(navigator.userAgent);
+  // Parse Firebase email action parameters from the current URL
+  const urlParams = new URLSearchParams(window.location.search);
+  const mode      = urlParams.get("mode");       // e.g. "verifyEmail", "resetPassword"
+  const oobCode   = urlParams.get("oobCode");
+  const apiKey    = urlParams.get("apiKey");
+  const continueUrl = urlParams.get("continueUrl");
+  const lang      = urlParams.get("lang");
 
-    if (isSafari) {
-      // Already in Safari — Universal Link fires normally
-      window.location.href = universalLink;
-    } else {
-      // Chrome / Gmail / any WKWebView — force open in Safari first,
-      // Safari will then intercept the Universal Link and open the app
-      window.location.href = `x-safari-${universalLink}`;
-    }
+  function buildDeepLink() {
+    // Forward all Firebase params to the universal link so the app can process them
+    const deep = new URL(`https://${UNIVERSAL_LINK_DOMAIN}/auth/action`);
+    if (mode)        deep.searchParams.set("mode", mode);
+    if (oobCode)     deep.searchParams.set("oobCode", oobCode);
+    if (apiKey)      deep.searchParams.set("apiKey", apiKey);
+    if (continueUrl) deep.searchParams.set("continueUrl", continueUrl);
+    if (lang)        deep.searchParams.set("lang", lang);
+    return deep.toString();
   }
 
-  function showDownload() {
-    statusEl.innerHTML = `<span style="color:#C0392B">App not detected on this device.</span>`;
-    downloadSection.style.display = "block";
+  // If required params are missing, show an error instead of the button
+  if (!oobCode) {
+    openAppBtn.disabled = true;
+    openAppBtn.style.opacity = "0.5";
+    statusEl.textContent = "Invalid or expired confirmation link.";
   }
 
-  // Safari blocks programmatic custom scheme redirects on page load.
-  // Must be triggered by a user gesture (tap).
-  statusEl.innerHTML = `<span>Tap below to open the app</span>`;
-  downloadSection.style.display = "block";
+  openAppBtn.addEventListener("click", () => {
+    const deepLink = buildDeepLink();
+    window.location.href = deepLink;
 
-  const tryAgainBtn = document.getElementById("tryAgain");
-  tryAgainBtn.textContent = "Open Armbrok App";
-  tryAgainBtn.style.cssText = `
-    margin-top: 16px;
-    padding: 14px 28px;
-    background: #1A56A0;
-    color: white;
-    border: none;
-    border-radius: 12px;
-    font-size: 16px;
-    font-weight: 600;
-    cursor: pointer;
-    width: 100%;
-    text-decoration: none;
-  `;
-
-  tryAgainBtn.onclick = () => {
-    openApp(); // safe — inside click handler
     setTimeout(() => {
       if (!document.hidden) {
-        // Still here → app not installed, show store buttons
-        statusEl.innerHTML = `<span style="color:#C0392B">App not detected on this device.</span>`;
-        tryAgainBtn.textContent = "Try Again";
-        tryAgainBtn.style.background = "none";
-        tryAgainBtn.style.color = "#1A56A0";
-        tryAgainBtn.style.padding = "0";
-        tryAgainBtn.style.fontSize = "13px";
-        tryAgainBtn.style.textDecoration = "underline";
+        statusEl.textContent = "Could not open the app. Please install it first.";
+        downloadSection.style.display = "block";
       }
     }, 2000);
-  };
+  });
 </script>
 </body>
 </html>
