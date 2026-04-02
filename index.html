@@ -126,7 +126,7 @@
   const urlParams   = new URLSearchParams(window.location.search);
   const currentLink = "https://stage.armbrok.am/auth/action?" + urlParams.toString();
   const oobCode     = urlParams.get("oobCode");
-  const isIOS       = /iPad|iPhone|iPod/.test(navigator.userAgent);
+
 
   // If required params are missing, show an error
   if (!oobCode) {
@@ -136,15 +136,7 @@
   }
 
   openAppBtn.addEventListener("click", () => {
-    if (isIOS) {
-      // On iOS non-Safari browsers (Chrome, Gmail, etc.), same-domain navigation
-      // won't trigger universal links. Force open in Safari which will intercept it.
-      window.location.href = "x-safari-" + currentLink;
-    } else {
-      // On Android, App Links with autoVerify work across all browsers.
-      // Navigate to the same URL — Android will intercept and open the app.
-      window.location.href = currentLink;
-    }
+    window.location.href = currentLink;
 
     setTimeout(() => {
       if (!document.hidden) {
