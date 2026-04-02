@@ -122,8 +122,9 @@
   // The current page URL is already the Firebase email link on stage.armbrok.am
   // (e.g. https://stage.armbrok.am/auth/email_link/sign_up?oobCode=...&mode=signIn&apiKey=...)
   // The app expects the FULL URL to pass to Firebase's signInWithEmailLink() or verifyPasswordResetCode()
-  const currentLink = window.location.href;
+  // const currentLink = window.location.href;
   const urlParams   = new URLSearchParams(window.location.search);
+  const currentLink = "https://stage.armbrok.am/auth/action?" + urlParams.toString();
   const oobCode     = urlParams.get("oobCode");
   const isIOS       = /iPad|iPhone|iPod/.test(navigator.userAgent);
 
