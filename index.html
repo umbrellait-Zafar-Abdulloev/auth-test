@@ -119,13 +119,22 @@
   const statusEl        = document.getElementById("status");
   const downloadSection = document.getElementById("downloadSection");
 
-  // The current page URL is already the Firebase email link on stage.armbrok.am
-  // (e.g. https://stage.armbrok.am/auth/email_link/sign_up?oobCode=...&mode=signIn&apiKey=...)
-  // The app expects the FULL URL to pass to Firebase's signInWithEmailLink() or verifyPasswordResetCode()
-  // const currentLink = window.location.href;
-  const urlParams   = new URLSearchParams(window.location.search);
-  const currentLink = "https://stage.armbrok.am/auth/action?" + urlParams.toString();
-  const oobCode     = urlParams.get("oobCode");
+  // The app's ParseDeepLinkUseCaseImpl checks uri.contains() for these exact paths:
+  //   - "https://stage.armbrok.am/auth/email_link/sign_up"      (email verification)
+  //   - "https://stage.armbrok.am/auth/email_link/reset_password" (password reset)
+  // Firebase's "mode" param tells us which flow this is.
+  const urlParams = new URLSearchParams(window.location.search);
+  const mode      = urlParams.get("mode");
+  const oobCode   = urlParams.get("oobCode");
+
+  // Map Firebase mode to the app's expected path
+  const pathMap = {
+    "signIn":        "/auth/email_link/sign_up",
+    "verifyEmail":   "/auth/email_link/sign_up",
+    "resetPassword": "/auth/email_link/reset_password",
+  };
+  const path = pathMap[mode] || "/auth/email_link/sign_up";
+  const currentLink = `https://${UNIVERSAL_LINK_DOMAIN}${path}?${urlParams.toString()}`;
 
 
   // If required params are missing, show an error
