@@ -119,26 +119,15 @@
   const statusEl        = document.getElementById("status");
   const downloadSection = document.getElementById("downloadSection");
 
-  // Parse Firebase email action parameters from the current URL
-  const urlParams = new URLSearchParams(window.location.search);
-  const mode      = urlParams.get("mode");       // e.g. "verifyEmail", "resetPassword"
-  const oobCode   = urlParams.get("oobCode");
-  const apiKey    = urlParams.get("apiKey");
-  const continueUrl = urlParams.get("continueUrl");
-  const lang      = urlParams.get("lang");
+  // The current page URL is already the Firebase email link on stage.armbrok.am
+  // (e.g. https://stage.armbrok.am/auth/email_link/sign_up?oobCode=...&mode=signIn&apiKey=...)
+  // The app expects the FULL URL to pass to Firebase's signInWithEmailLink() or verifyPasswordResetCode()
+  const currentLink = window.location.href;
+  const urlParams   = new URLSearchParams(window.location.search);
+  const oobCode     = urlParams.get("oobCode");
+  const isIOS       = /iPad|iPhone|iPod/.test(navigator.userAgent);
 
-  function buildDeepLink() {
-    // Forward all Firebase params to the universal link so the app can process them
-    const deep = new URL(`https://${UNIVERSAL_LINK_DOMAIN}/auth/action`);
-    if (mode)        deep.searchParams.set("mode", mode);
-    if (oobCode)     deep.searchParams.set("oobCode", oobCode);
-    if (apiKey)      deep.searchParams.set("apiKey", apiKey);
-    if (continueUrl) deep.searchParams.set("continueUrl", continueUrl);
-    if (lang)        deep.searchParams.set("lang", lang);
-    return deep.toString();
-  }
-
-  // If required params are missing, show an error instead of the button
+  // If required params are missing, show an error
   if (!oobCode) {
     openAppBtn.disabled = true;
     openAppBtn.style.opacity = "0.5";
@@ -146,15 +135,22 @@
   }
 
   openAppBtn.addEventListener("click", () => {
-    const deepLink = buildDeepLink();
-    window.location.href = deepLink;
+    if (isIOS) {
+      // On iOS non-Safari browsers (Chrome, Gmail, etc.), same-domain navigation
+      // won't trigger universal links. Force open in Safari which will intercept it.
+      window.location.href = "x-safari-" + currentLink;
+    } else {
+      // On Android, App Links with autoVerify work across all browsers.
+      // Navigate to the same URL — Android will intercept and open the app.
+      window.location.href = currentLink;
+    }
 
     setTimeout(() => {
       if (!document.hidden) {
         statusEl.textContent = "Could not open the app. Please install it first.";
         downloadSection.style.display = "block";
       }
-    }, 2000);
+    }, 2500);
   });
 </script>
 </body>
