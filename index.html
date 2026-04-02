@@ -115,7 +115,7 @@
 
   function openApp() {
     const continueUrl = window.location.href;
-    const universalLink = `https://${UNIVERSAL_LINK_DOMAIN}/auth/action?link=${encodeURIComponent(continueUrl)}`;
+    const universalLink = `https://${UNIVERSAL_LINK_DOMAIN}/auth/action`;
     const isSafari = /^((?!chrome|android).)*safari/i.test(navigator.userAgent);
 
     if (isSafari) {
