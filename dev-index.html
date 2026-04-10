@@ -1,0 +1,159 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Confirm Your Email — ROQ Markets</title>
+  <style>
+    * { margin: 0; padding: 0; box-sizing: border-box; }
+
+    body {
+      font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+      background: #0f1117;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      min-height: 100vh;
+    }
+
+    .card {
+      background: #1a1c25;
+      border-radius: 20px;
+      padding: 40px 40px 28px;
+      max-width: 400px;
+      width: 90%;
+      text-align: center;
+      box-shadow: 0 8px 32px rgba(0,0,0,0.3);
+      border: 1px solid rgba(255,255,255,0.06);
+    }
+
+    .icon {
+      width: 72px; height: 72px;
+      border-radius: 16px;
+      overflow: hidden;
+      margin: 0 auto 24px;
+    }
+    .icon img { width: 100%; height: 100%; object-fit: cover; }
+
+    h1 { font-size: 22px; font-weight: 700; color: #ffffff; margin-bottom: 10px; }
+    .subtitle { font-size: 15px; color: #8e90a0; line-height: 1.6; margin-bottom: 20px; }
+
+    .open-btn {
+      display: block;
+      width: 100%;
+      padding: 16px 28px;
+      background: #B71C1C;
+      color: white;
+      border: none;
+      border-radius: 12px;
+      font-size: 17px;
+      font-weight: 600;
+      cursor: pointer;
+      transition: opacity 0.2s;
+      text-decoration: none;
+    }
+    .open-btn:hover { opacity: 0.9; }
+    .open-btn:active { opacity: 0.8; }
+
+    .status {
+      margin-top: 16px;
+      font-size: 14px;
+      color: #E74C3C;
+      min-height: 20px;
+    }
+
+    .download-section { display: none; margin-top: 28px; }
+    .download-label { font-size: 13px; color: #5a5c6e; margin-bottom: 16px; }
+    .store-buttons { display: flex; flex-direction: column; gap: 12px; }
+
+    .store-btn {
+      display: flex; align-items: center; justify-content: center;
+      gap: 12px; padding: 14px 20px; border-radius: 12px;
+      border: 1px solid rgba(255,255,255,0.08);
+      cursor: pointer; font-size: 15px; font-weight: 600;
+      text-decoration: none; transition: opacity 0.2s;
+    }
+    .store-btn:hover { opacity: 0.85; }
+    .store-btn svg { width: 22px; height: 22px; flex-shrink: 0; }
+    .btn-appstore  { background: #000; color: #fff; }
+    .btn-playstore { background: #01875f; color: #fff; }
+  </style>
+</head>
+<body>
+<div class="card">
+  <div class="icon">
+    <img src="1024x1024.png" alt="ROQ Markets" />
+  </div>
+  <h1>Confirm Your Email</h1>
+  <p class="subtitle">Tap the button below to open the ROQ Markets Dev app and complete your email confirmation.</p>
+
+  <button class="open-btn" id="openAppBtn">Open ROQ Markets Dev</button>
+  <div class="status" id="status"></div>
+
+  <div class="download-section" id="downloadSection">
+    <p class="download-label">Don't have the app yet? Download it here:</p>
+    <div class="store-buttons">
+      <a class="store-btn btn-appstore" id="appStoreBtn" href="#" target="_blank">
+        <svg viewBox="0 0 24 24" fill="white"><path d="M18.71 19.5c-.83 1.24-1.71 2.45-3.05 2.47-1.34.03-1.77-.79-3.29-.79-1.53 0-2 .77-3.27.82-1.31.05-2.3-1.32-3.14-2.53C4.25 17 2.94 12.45 4.7 9.39c.87-1.52 2.43-2.48 4.12-2.51 1.28-.02 2.5.87 3.29.87.78 0 2.26-1.07 3.8-.91.65.03 2.47.26 3.64 1.98-.09.06-2.17 1.28-2.15 3.81.03 3.02 2.65 4.03 2.68 4.04-.03.07-.42 1.44-1.38 2.83M13 3.5c.73-.83 1.94-1.46 2.94-1.5.13 1.17-.34 2.35-1.04 3.19-.69.85-1.83 1.51-2.95 1.42-.15-1.15.41-2.35 1.05-3.11z"/></svg>
+        App Store
+      </a>
+      <a class="store-btn btn-playstore" id="playStoreBtn" href="#" target="_blank">
+        <svg viewBox="0 0 24 24" fill="white"><path d="M3.18 23.76c.3.17.64.22.99.14l.11-.07 11.29-6.52-2.43-2.44-9.96 8.89zm-1.1-20.69A1.5 1.5 0 0 0 2 4v16a1.5 1.5 0 0 0 .08.52l9.26-8.28-9.26-9.17zm19.4 8.42-2.56-1.48-2.72 2.43 2.72 2.73 2.59-1.5c.74-.43.74-1.74-.03-2.18zm-16.84 9.3 9.96-5.75-2.43-2.44-7.53 8.19z"/></svg>
+        Google Play
+      </a>
+    </div>
+  </div>
+</div>
+
+<script>
+  // ─── FILL IN YOUR URLS ───────────────────────────────────────────────────────
+  const UNIVERSAL_LINK_DOMAIN = "dev.armbrok.am";
+  const APP_STORE_URL         = "YOUR_APP_STORE_URL";
+  const PLAY_STORE_URL        = "https://play.google.com/store/apps/details?id=com.armbrok.app";
+  // ─────────────────────────────────────────────────────────────────────────────
+
+  document.getElementById("appStoreBtn").href  = APP_STORE_URL;
+  document.getElementById("playStoreBtn").href = PLAY_STORE_URL;
+
+  const openAppBtn      = document.getElementById("openAppBtn");
+  const statusEl        = document.getElementById("status");
+  const downloadSection = document.getElementById("downloadSection");
+
+  // The app's ParseDeepLinkUseCaseImpl checks uri.contains() for these exact paths:
+  //   - "https://stage.armbrok.am/auth/email_link/sign_up"      (email verification)
+  //   - "https://stage.armbrok.am/auth/email_link/reset_password" (password reset)
+  // Firebase's "mode" param tells us which flow this is.
+  const urlParams = new URLSearchParams(window.location.search);
+  const mode      = urlParams.get("mode");
+  const oobCode   = urlParams.get("oobCode");
+
+  // Map Firebase mode to the app's expected path
+  const pathMap = {
+    "signIn":        "/auth/email_link/sign_up",
+    "verifyEmail":   "/auth/email_link/sign_up",
+    "resetPassword": "/auth/email_link/reset_password",
+  };
+  const path = pathMap[mode] || "/auth/email_link/sign_up";
+  const currentLink = `https://${UNIVERSAL_LINK_DOMAIN}${path}?${urlParams.toString()}`;
+
+
+  // If required params are missing, show an error
+  if (!oobCode) {
+    openAppBtn.disabled = true;
+    openAppBtn.style.opacity = "0.5";
+    statusEl.textContent = "Invalid or expired confirmation link.";
+  }
+
+  openAppBtn.addEventListener("click", () => {
+    window.location.href = currentLink;
+
+    setTimeout(() => {
+      if (!document.hidden) {
+        statusEl.textContent = "Could not open the app. Please install it first.";
+        downloadSection.style.display = "block";
+      }
+    }, 2500);
+  });
+</script>
+</body>
+</html>
