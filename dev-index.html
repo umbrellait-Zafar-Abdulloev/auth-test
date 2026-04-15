@@ -136,6 +136,14 @@
   const path = pathMap[mode] || "/auth/email_link/sign_up";
   const currentLink = `https://${UNIVERSAL_LINK_DOMAIN}${path}?${urlParams.toString()}`;
 
+  // Opera / Mi Browser don't dispatch Android App Links from window.location = https://...
+  // Use an intent:// URL on Android so the OS hands off to the app explicitly.
+  const isAndroid = /android/i.test(navigator.userAgent);
+  const ANDROID_PACKAGE = "com.armbrok.app.dev";
+  const intentLink =
+    `intent://${UNIVERSAL_LINK_DOMAIN}${path}?${urlParams.toString()}` +
+    `#Intent;scheme=https;package=${ANDROID_PACKAGE};` +
+    `S.browser_fallback_url=${encodeURIComponent(PLAY_STORE_URL)};end`;
 
   // If required params are missing, show an error
   if (!oobCode) {
@@ -145,7 +153,7 @@
   }
 
   openAppBtn.addEventListener("click", () => {
-    window.location.href = currentLink;
+    window.location.href = isAndroid ? intentLink : currentLink;
 
     setTimeout(() => {
       if (!document.hidden) {
